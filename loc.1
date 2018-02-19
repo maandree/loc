@@ -1,0 +1,42 @@
+.TH LOC 1 "loc"
+.SH NAME
+loc - count number of lines of code
+.SH SYNOPSIS
+.B loc
+.RI [ file "] ..."
+.SH DESCRIPTION
+.B loc
+counts the number of lines of code for each specified
+.BR file .
+.B loc
+will treat each file as a C source code or C header file. If
+.I file
+is
+.BR - ,
+the standard input is read.
+.PP
+If no
+.I file
+is specified, the standard input is read, and the number
+of lines of code is output on the format
+.nf
+
+	\fB"%zu\n"\fP, <\fI#lines of code\fP>
+.fi
+.PP
+If exactly one
+.I file
+is specified, its number of lines of code is output on the format
+.nf
+
+	\fB"%zu\n"\fP, <\fI#lines of code\fP>
+.fi
+.PP
+If more than one
+.I file
+is specified, each successfully line counted file will have
+its of lines of code output on the format
+.nf
+
+	\fB"%s:%*s%zu\n"\fP, <\fIfile\fP>, <\fIsome positive integer\fP>, \fB""\fP, <\fI#lines of code\fP>
+.fi

@@ -1,0 +1,26 @@
+NAME
+	loc - count number of lines of code
+
+SYNOPSIS
+	loc [file] ...
+
+DESCRIPTION
+	loc counts the number of lines of code for each specified
+	file. loc will treat each file as a C source code or C header
+	file. If file is -, the standard input is read.
+
+	If no file is specified, the standard input is read, and
+	the number of lines of code is output on the format
+
+		"%zu\n", <#lines of code>
+
+	If exactly one file is specified, its number of lines of
+	code is output on the format
+
+		"%zu\n", <#lines of code>
+
+	If more than one file is specified, each successfully
+	line counted file will have its of lines of code output on
+	the format
+
+		"%s:%*s%zu\n", <file>, <some positive integer>, "", <#lines of code>
