@@ -52,6 +52,7 @@ count(int fd, const char *fname)
 					ret += (ssize_t)!beginning;
 					beginning = 1;
 					escaped = 0;
+					continue;
 				} else if (escaped) {
 					escaped = 0;
 				} else if (buf[i] == quote) {
@@ -59,6 +60,7 @@ count(int fd, const char *fname)
 				} else if (buf[i] == '\\') {
 					escaped = 1;
 				}
+				beginning = 0;
 			} else if (c_comment) {
 				if (buf[i] == '\n') {
 					ret += (ssize_t)!beginning;
