@@ -12,7 +12,8 @@ loc: loc.o
 check: loc
 	test "$$(./loc < tests/0)" = 0
 	test "$$(./loc - < tests/0)" = 0
-	test "$$(./loc tests/1 tests/2 | sed 's/:  */: /')" = "$$(printf '%s\n' 'tests/1: 0' 'tests/2: 1')"
+	test "$$(./loc tests/1 tests/2 | sed 's/:  */: /')" = "$$(printf '%s\n' 'tests/1: 0' 'tests/2: 1' 1)"
+	test "$$(./loc -s tests/1 tests/2)" = 1
 	test "$$(./loc tests/0)" = 0
 	test "$$(./loc tests/1)" = 0
 	test "$$(./loc tests/2)" = 1
