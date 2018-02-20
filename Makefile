@@ -54,6 +54,7 @@ check: loc
 	test "$$(./loc tests/37)" = 1
 	test "$$(./loc tests/38)" = 0
 	test "$$(./loc tests/39)" = 1
+	test "$$(./loc tests/40)" = 2
 
 install: loc
 	mkdir -p -- "$(DESTDIR)$(PREFIX)/bin/"
