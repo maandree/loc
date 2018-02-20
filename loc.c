@@ -137,55 +137,12 @@ zuwidth(size_t num)
 	return sprintf(buf, "%zu", num);
 }
 
-static int
-xopen(const char *path, int flags, int *closep)
-{
-	int fd;
-	const char *num;
-	unsigned long int tmp;
-
-	*closep = 0;
-
-	if (!strcmp(path, "/dev/stdin"))
-		return STDIN_FILENO;
-	if (!strcmp(path, "/dev/stdout"))
-		return STDOUT_FILENO;
-	if (!strcmp(path, "/dev/stderr"))
-		return STDERR_FILENO;
-	if (strncmp(path, "/dev/fd/", sizeof("/dev/fd/") - 1)) {
-		num = &path[sizeof("/dev/fd/") - 1];
-		goto inherited;
-	}
-	if (strncmp(path, "/proc/self/fd/", sizeof("/proc/self/fd/") - 1)) {
-		num = &path[sizeof("/proc/self/fd/") - 1];
-		goto inherited;
-	}
-
-normal:
-	fd = open(path, flags);
-	if (fd < 0) {
-		fprintf(stderr, "%s: %s: %s\n", argv0, path, strerror(errno));
-		return -1;
-	}
-	*closep = 1;
-	return fd;
-
-inherited:
-	if (!isdigit(*num))
-		goto normal;
-	errno = 0;
-	tmp = strtoul(num, (void *)&num, 10);
-	if (errno || *num || tmp > (unsigned long int)INT_MAX)
-		goto normal;
-	return (int)tmp;
-}
-
 int
 main(int argc, char *argv[])
 {
 	ssize_t n;
 	struct result *res;
-	int i, fd, doclose, maxleft = 0, maxright = 0, maxwidth, left, right, ret = 0;
+	int i, fd, maxleft = 0, maxright = 0, maxwidth, left, right, ret = 0;
 
 	ARGBEGIN {
 	default:
@@ -196,12 +153,11 @@ main(int argc, char *argv[])
 		if (!argc || !strcmp(argv[0], "-")) {
 			n = count(STDIN_FILENO, "<stdin>");
 		} else {
-			fd = xopen(argv[0], O_RDONLY, &doclose);
+			fd = open(argv[0], O_RDONLY);
 			if (fd < 0)
 				return 1;
 			n = count(fd, argv[0]);
-			if (doclose)
-				close(fd);
+			close(fd);
 		}
 		printf("%zi\n", n);
 	} else {
@@ -210,12 +166,11 @@ main(int argc, char *argv[])
 		for (i = 0; i < argc; i++) {
 			if (!strcmp(argv[i], "-")) {
 				res[i].n = count(STDIN_FILENO, "<stdin>");
-			} else if ((fd = xopen(argv[i], O_RDONLY, &doclose)) < 0) {
+			} else if ((fd = open(argv[i], O_RDONLY)) < 0) {
 				res[i].n = -1;
 			} else {
 				res[i].n = count(fd, argv[i]);
-				if (doclose)
-					close(fd);
+				close(fd);
 			}
 			if (res[i].n >= 0) {
 				left = strwidth(argv[i]);
