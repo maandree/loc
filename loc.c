@@ -174,11 +174,9 @@ main(int argc, char *argv[])
 			}
 			if (res[i].n >= 0) {
 				left = strwidth(argv[i]);
-				if (left > maxleft)
-					maxleft = left;
+				left = left > maxleft ? left : maxleft;
 				right = zuwidth(res[i].n);
-				if (right > maxright)
-					maxright = right;
+				right = right > maxright ? right : maxright;
 				res[i].width = left + right;
 			}
 		}
