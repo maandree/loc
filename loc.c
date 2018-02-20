@@ -21,7 +21,7 @@ struct result {
 static void
 usage(void)
 {
-	fprintf(stderr, "usage: %s [file] ...\n", argv0);
+	fprintf(stderr, "usage: %s [-s] [file] ...\n", argv0);
 	exit(1);
 }
 
@@ -140,11 +140,15 @@ zuwidth(size_t num)
 int
 main(int argc, char *argv[])
 {
-	ssize_t n;
+	ssize_t n, total = 0;
 	struct result *res;
 	int i, fd, maxleft = 0, maxright = 0, maxwidth, left, right, ret = 0;
+	int sum_only = 0;
 
 	ARGBEGIN {
+	case 's':
+		sum_only = 1;
+		break;
 	default:
 		usage();
 	} ARGEND;
@@ -181,12 +185,17 @@ main(int argc, char *argv[])
 			}
 		}
 		maxwidth = maxleft + maxright;
-		for (i = 0; i < argc; i++)
-			if (res[i].n < 0)
+		for (i = 0; i < argc; i++) {
+			if (res[i].n < 0) {
 				ret = 1;
-			else
-				printf("%s:%*s %zi\n", argv[i], maxwidth - res[i].width, "", res[i].n);
+			} else {
+				if (!sum_only)
+					printf("%s:%*s %zi\n", argv[i], maxwidth - res[i].width, "", res[i].n);
+				total += res[i].n;
+			}
+		}
 		free(res);
+		printf("%zi\n", total);
 	}
 
         if (fflush(stdin) || ferror(stdin) || fclose(stdin))

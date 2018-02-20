@@ -13,24 +13,7 @@ will treat each file as a C source code or C header file. If
 .I file
 is
 .BR - ,
-the standard input is read.
-.PP
-If no
-.I file
-is specified, the standard input is read, and the number
-of lines of code is output on the format
-.nf
-
-	\fB"%zu\n"\fP, <\fI#lines of code\fP>
-.fi
-.PP
-If exactly one
-.I file
-is specified, its number of lines of code is output on the format
-.nf
-
-	\fB"%zu\n"\fP, <\fI#lines of code\fP>
-.fi
+or if a file is not specified, the standard input is read.
 .PP
 If more than one
 .I file
@@ -40,3 +23,17 @@ its of lines of code output on the format
 
 	\fB"%s:%*s%zu\n"\fP, <\fIfile\fP>, <\fIsome positive integer\fP>, \fB""\fP, <\fI#lines of code\fP>
 .fi
+.PP
+The total for all processed files, is printed on the last
+line with the format
+.nf
+
+	\fB"%zu\n"\fP, <\fI#total lines of code\fP>
+.fi
+.PP
+If exactly one or no files are specified, this will be the
+only line output.
+.SH OPTIONS
+.TP
+.B \-s
+Only output the last line. (The total over all files.)
