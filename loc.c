@@ -163,7 +163,10 @@ main(int argc, char *argv[])
 			n = count(fd, argv[0]);
 			close(fd);
 		}
-		printf("%zi\n", n);
+		if (n >= 0)
+			printf("%zi\n", n);
+		else
+			ret = 1;
 	} else {
 		if (!(res = calloc(argc, sizeof(struct result))))
 			fprintf(stderr, "%s: out of memory\n", argv0), exit(1);
