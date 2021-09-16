@@ -11,6 +11,7 @@
 
 #include "arg.h"
 
+
 char *argv0;
 
 struct result {
@@ -168,7 +169,7 @@ main(int argc, char *argv[])
 		else
 			ret = 1;
 	} else {
-		if (!(res = calloc(argc, sizeof(struct result))))
+		if (!(res = calloc((size_t)argc, sizeof(struct result))))
 			fprintf(stderr, "%s: out of memory\n", argv0), exit(1);
 		for (i = 0; i < argc; i++) {
 			if (!strcmp(argv[i], "-")) {
@@ -182,7 +183,7 @@ main(int argc, char *argv[])
 			if (res[i].n >= 0) {
 				left = strwidth(argv[i]);
 				maxleft = left > maxleft ? left : maxleft;
-				right = zuwidth(res[i].n);
+				right = zuwidth((size_t)res[i].n);
 				maxright = right > maxright ? right : maxright;
 				res[i].width = left + right;
 			}

@@ -3,11 +3,15 @@
 CONFIGFILE = config.mk
 include $(CONFIGFILE)
 
+
 all: loc
 loc.o: loc.c arg.h
 
-loc: loc.o
-	$(CC) -o $@ loc.o $(LDFLAGS)
+.c.o:
+	$(CC) -c -o $@ $< $(CFLAGS) $(CPPFLAGS)
+
+.o:
+	$(CC) -o $@ $< $(LDFLAGS)
 
 check: loc
 	test "$$(./loc < tests/0)" = 0
@@ -67,7 +71,7 @@ uninstall:
 	-rm -f -- "$(DESTDIR)$(MANPREFIX)/man1/loc.1"
 
 clean:
-	-rm -f -- loc.o loc
+	-rm -f -- *.o *.su loc
 
 .SUFFIXES:
 .SUFFIXES: .o .c
